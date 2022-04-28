@@ -1,8 +1,59 @@
+import RPi.GPIO as GPIO
+import time
 from django.http import HttpResponse
-from robot.extras.helper_functions import *
-from robot.extras.gripper_motor import *
-from robot.extras.wrist_motor import *
+GPIO.setmode(GPIO.BOARD)
 
+#Helper Functions:
+def motor_setup(pin):
+    GPIO.setup(pin, GPIO.OUT)
+    motor = GPIO.PWM(pin, 50)
+    motor.start(0)
+    return motor
+    
+def degree_to_DC(degree):
+    dc = 1/18*(degree)+2
+    return dc
+
+def change_DC(motor,dc):
+    motor.ChangeDutyCycle(dc)
+    time.sleep(0.2)
+    motor.ChangeDutyCycle(0)
+    time.sleep(0.8)
+
+def clean_up(motor):
+    motor.stop()
+    GPIO.cleanup()
+
+#Gripper Functions
+def to_full_open(motor):
+    pos = 60
+    dc = degree_to_DC(pos)   
+#     print(dc)
+#     print(motor)
+    change_DC(motor, dc)
+    time.sleep(0.2)
+
+def grab(motor):
+#     for pos in range(50,-1,-1):
+#         dc = degree_to_DC(pos)
+#         change_DC(motor, dc)
+#         print("current position: ",pos)
+#         time.sleep(0.05)
+    dc = degree_to_DC(0)
+    change_DC(motor, dc)
+
+#Wrist Motor Functions
+def pour(motor) :
+    pos = 80
+    dc = degree_to_DC(pos)
+    change_DC(motor,dc)
+    
+def homing(motor):
+    pos = 180
+    dc = degree_to_DC(pos)
+    change_DC(motor,dc)
+
+#Set up
 def setup(request):
     html = "<html><body>This describes the setup of the robotic arm</body></html>"
     return HttpResponse(html)
