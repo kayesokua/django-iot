@@ -23,17 +23,13 @@ def clean_up(motor):
     GPIO.cleanup()
 
 def test_range(motor):
-    for degree in range(0,181,10):
-        motor.ChangeDutyCycle(dc)
-        time.sleep(0.2)
-        motor.ChangeDutyCycle(0)
+    for degree in range(0,181,30):
+        dc = degree_to_DC(degree)
+        change_DC(motor,dc)
         print("the degree turns to: ",degree)
-        time.sleep(0.5)
 
-    for degree in range(180,-1,-10):
-        dc = 1/18*(degree)+2
-        motor.ChangeDutyCycle(dc)
-        time.sleep(0.2)
-        motor.ChangeDutyCycle(0)
+
+    for degree in range(180,-1,-30):
+        dc = degree_to_DC(degree)
+        change_DC(motor,dc)
         print("the degree turns to: ",degree)
-        time.sleep(0.5)

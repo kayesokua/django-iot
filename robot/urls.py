@@ -1,5 +1,4 @@
 from django.urls import path
-from robot.views import setup,gripper
 from robot.views import *
 
 urlpatterns = [
