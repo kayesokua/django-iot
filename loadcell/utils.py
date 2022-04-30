@@ -1,13 +1,11 @@
 # HX711 for Raspbery Py
 # Author: tatobari
 # Source: https://github.com/tatobari/hx711py
-
 import RPi.GPIO as GPIO
 import time
 import threading
 
 class HX711:
-
     def __init__(self, dout, pd_sck, gain=128):
         self.PD_SCK = pd_sck
 
@@ -38,10 +36,6 @@ class HX711:
         self.bit_format = 'MSB'
 
         self.set_gain(gain)
-
-        # Think about whether this is necessary.
-        time.sleep(1)
-
         
     def convertFromTwosComplement24bit(self, inputValue):
         return -(inputValue & 0x800000) + (inputValue & 0x7fffff)
@@ -421,6 +415,4 @@ class HX711:
     def reset(self):
         self.power_down()
         self.power_up()
-
-
 # EOF - hx711.py

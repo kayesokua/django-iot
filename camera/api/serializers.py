@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from camera.models import PiImage
 import pytesseract
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
 
 class PiImageSerializer(serializers.ModelSerializer):
     photo_url = serializers.SerializerMethodField()

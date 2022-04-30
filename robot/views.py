@@ -1,108 +1,58 @@
-import RPi.GPIO as GPIO
 import time
 from django.http import HttpResponse
-GPIO.setmode(GPIO.BOARD)
+from .utils import *
 
-#Helper Functions:
-def motor_setup(pin):
-    GPIO.setup(pin, GPIO.OUT)
-    motor = GPIO.PWM(pin, 50)
-    motor.start(0)
-    return motor
-    
-def degree_to_DC(degree):
-    dc = 1/18*(degree)+2
-    return dc
+Pins = {
+   13: {"name" : "gripper", "homing_pos": 60, "sleep_time":0.2,"task_pos":0, "sleep_time_task":0.05},
+   11: {"name" : "wrist", "homing_pos": 180, "sleep_time":0.0,"task_pos":80, "sleep_time_task":0.0},
+   15: {"name" : "upper_arm", "homing_pos": 90, "sleep_time":0.0,"task_pos":120, "sleep_time_task":0.0},
+   37: {"name" : "lower_arm", "homing_pos": 120, "sleep_time":0.0,"task_pos":0, "sleep_time_task":0.0},
+   35: {"name" : "waist", "homing_pos": 0, "sleep_time":0.0,"task_pos":0, "sleep_time_task":0.0}
+   }
 
-def change_DC(motor,dc):
-    motor.ChangeDutyCycle(dc)
-    time.sleep(0.2)
-    motor.ChangeDutyCycle(0)
-    time.sleep(0.8)
-
-def clean_up(motor):
-    motor.stop()
-    GPIO.cleanup()
-
-#Gripper Functions
-def to_full_open(motor):
-    pos = 60
-    dc = degree_to_DC(pos)   
-#     print(dc)
-#     print(motor)
-    change_DC(motor, dc)
-    time.sleep(0.2)
-
-def grab(motor):
-#     for pos in range(50,-1,-1):
-#         dc = degree_to_DC(pos)
-#         change_DC(motor, dc)
-#         print("current position: ",pos)
-#         time.sleep(0.05)
-    dc = degree_to_DC(0)
-    change_DC(motor, dc)
-
-#Wrist Motor Functions
-def pour(motor) :
-    pos = 80
-    dc = degree_to_DC(pos)
-    change_DC(motor,dc)
-    
-def homing(motor):
-    pos = 180
-    dc = degree_to_DC(pos)
-    change_DC(motor,dc)
-
-#Set up
-def setup(request):
-    html = "<html><body>This describes the setup of the robotic arm</body></html>"
+def robot_homing(request):
+    for pin in Pins:
+        testing_pin = motor_setup(pin)
+        testing_pin_pos = pin["homing_pos"]
+        dc = degree_to_DC(testing_pin_pos)
+        degree_to_DC(testing_pin_pos)
+        change_DC(testing_pin,dc)
+        time.sleep(pin["sleep_time"])
+        clean_up(testing_pin)
+    html = "<html><body>This should let you view the robot that is running</body></html>"
     return HttpResponse(html)
 
-def gripper(request):
+def test_gripper_range(request):
     gripper = motor_setup(13)
-    to_full_open(gripper)
-    grab(gripper)
+    test_range(gripper)
     clean_up(gripper)
-    html = "<html><body>This desribes the gripper</body></html>"
+    html = "<html><body>This lets you test the gripper</body></html>"
     return HttpResponse(html)
 
-def wrist(request):
+def test_wrist_range(request):
     wrist = motor_setup(11)
-    homing(wrist)                        
-    pour(wrist)
-    homing(wrist)
+    test_range(wrist)
     clean_up(wrist)
-    html = "<html><body>This desribes the wrist</body></html>"
+    html = "<html><body>This lets you test the wrist</body></html>"
     return HttpResponse(html)
 
-def upper_arm(request):
-    html = "<html><body>This desribes the upper arm</body></html>"
-    return HttpResponse(html)
-
-def lower_arm(request):
-    html = "<html><body>This desribes the lower arm./body></html>"
-    return HttpResponse(html)
-
-def waist(request):
-    html = "<html><body>This is the waist. Start move</body></html>"
-    return HttpResponse(html)
-
-def test_gripper(request):
-    html = "<html><body>This desribes the gripper</body></html>"
-    return HttpResponse(html)
-
-def test_wrist(request):
-    html = "<html><body>Checking if the wrist arm is turning</body></html>"
-    return HttpResponse(html)
-
-def test_upper_arm(request):
+def test_upper_arm_range(request):
+    upper_arm = motor_setup(15)
+    test_range(upper_arm)
+    clean_up(upper_arm)
     html = "<html><body>Checking if the upper arm is turning</body></html>"
     return HttpResponse(html)
 
-def test_lower_arm(request):
+def test_lower_arm_range(request):
+    lower_arm = motor_setup(37)
+    test_range(lower_arm)
+    clean_up(lower_arm)
     html = "<html><body>Checking if the lower arm is turning</body></html>"
     return HttpResponse(html)
 
-def test_waist(request):
+def test_waist_range(request):
+    waist = motor_setup(35)
+    test_range(waist)
+    clean_up(waist)
     html = "<html><body>Checking if the waist is turning</body></html>"
     return HttpResponse(html)

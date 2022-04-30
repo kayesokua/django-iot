@@ -1,11 +1,11 @@
+<html>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8  offset-lg-2">
-                <h3 class="mt-5">Live Streaming</h3>
-                <img src="{{ url_for('video_feed') }}" width="100%">
-            </div>
-        </div>
-    </div>
-    </body>
-    
+<img src= "https://unsplash.it/600/400" />
+<form action="#" method="POST">
+    {% csrf_token %}
+    <input type="file" name="picamera_img" accept="image/*" id="id_picamera_img" onchange="form.submit()">
+    <button type="submit" class="btn btn-primary">Capture</button>        
+    </form>
+</form>
+</body>
+</html>

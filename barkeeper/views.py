@@ -1,3 +1,6 @@
+import time
+#from GPIOEmulator.EmulatorGUI import GPIO
+#import RPi.GPIO as GPIO
 from django.http import HttpResponse
 
 def barkeeper_home(request):
