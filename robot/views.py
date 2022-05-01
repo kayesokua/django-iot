@@ -11,13 +11,13 @@ Pins = {
    }
 
 def robot_homing(request):
-    for pin in Pins:
+    for pin,config in Pins.items():
         testing_pin = motor_setup(pin)
-        testing_pin_pos = pin["homing_pos"]
+        testing_pin_pos = config["homing_pos"]
         dc = degree_to_DC(testing_pin_pos)
         degree_to_DC(testing_pin_pos)
         change_DC(testing_pin,dc)
-        time.sleep(pin["sleep_time"])
+        time.sleep(config["sleep_time"])
         clean_up(testing_pin)
     html = "<html><body>This should let you view the robot that is running</body></html>"
     return HttpResponse(html)
