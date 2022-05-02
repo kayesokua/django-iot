@@ -1,5 +1,6 @@
 from django.urls import path
 from barkeeper.views import *
+from barkeeper.api.viewsets import EventListAV, EventDetailAV
 
 urlpatterns = [
     path('/', barkeeper_home, name='barkeeper_home'),
@@ -10,5 +11,7 @@ urlpatterns = [
     path('/task/grab', barkeeper_task_grab, name='barkeeper_task_grab'),
     path('/task/pour', barkeeper_task_pour, name='barkeeper_task_pour'),
     path('/task/release', barkeeper_task_release, name='barkeeper_task_release'),
-    path('/events', events, name='events')
+    path('/events', events, name='events'),
+    path('api/', EventListAV.as_view(), name='api-event-list'),
+    path('api/<int:pk>', EventDetailAV.as_view(), name='api-event-detail'),
 ]
